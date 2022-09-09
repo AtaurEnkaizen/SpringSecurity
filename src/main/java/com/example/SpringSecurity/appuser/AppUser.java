@@ -1,5 +1,6 @@
 package com.example.SpringSecurity.appuser;
 
+import com.example.SpringSecurity.Entity.Employee;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -19,14 +22,14 @@ import java.util.Collections;
 public class AppUser implements UserDetails {
 
     @SequenceGenerator(
-            name = "random_sequence",
-            sequenceName = "random_sequence",
+            name = "app_user_sequence",
+            sequenceName = "app_user_sequence",
             allocationSize = 1
     )
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "random_sequence"
+            generator = "app_user_sequence"
     )
 
     private long id;
@@ -38,6 +41,9 @@ public class AppUser implements UserDetails {
     private AppUserRole appUserRole;
     private boolean locked;
     private boolean enabled;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Employee employee;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority =
@@ -57,7 +63,7 @@ public class AppUser implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
