@@ -2,19 +2,26 @@ package com.example.SpringSecurity.Controller;
 
 import com.example.SpringSecurity.Entity.Employee;
 import com.example.SpringSecurity.Repository.EmployeeRepository;
+import com.example.SpringSecurity.Service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@RequestMapping("/employee")
 public class EmployeeController {
     @Autowired
-    private EmployeeRepository employeeRepository;
-    @PostMapping("/employees/add")
+    private EmployeeService employeeService;
+    /*@PostMapping("/employees/add")
     public String addEmployee(@ModelAttribute Employee employee)
     {
-        employeeRepository.save(employee);
+        employeeService.save(employee);
         return "Done";
+    }*/
+    @GetMapping("/all")
+    public List<Employee> getAllEmployee()
+    {
+        return employeeService.getAllEmployee();
     }
 }

@@ -29,26 +29,13 @@ public class Employee {
     private String address;
     private String phone;
     private boolean isActive;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    /*@JoinColumns({
-            @JoinColumn(name="app_user_id", referencedColumnName="id"),
-            @JoinColumn(name="manager_id", referencedColumnName="id")
-    })*/
-    private AppUser appUser;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "dept_id", referencedColumnName = "id")
-    private Department department;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "designation_id", referencedColumnName = "id")
-    private Department designation;
 
-    public Employee(String name, String address, String phone, boolean isActive, AppUser appUser, Department department, Department designation) {
-        this.name = name;
-        this.address = address;
-        this.phone = phone;
-        this.isActive = isActive;
-        this.appUser = appUser;
-        this.department = department;
-        this.designation = designation;
-    }
+    //Relationship
+    @OneToOne(cascade = CascadeType.ALL)
+    private Department department;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Designation designation;
+    @OneToOne(cascade = CascadeType.ALL)
+    private AppUser manager;
+
 }

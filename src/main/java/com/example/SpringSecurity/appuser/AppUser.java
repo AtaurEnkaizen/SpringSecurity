@@ -41,10 +41,13 @@ public class AppUser implements UserDetails {
     private AppUserRole appUserRole;
     private boolean locked;
     private boolean enabled;
+    private String name;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    //Relationships
+    @OneToOne(cascade = CascadeType.ALL)
     private Employee employee;
-    @Override
+
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority =
                 new SimpleGrantedAuthority(appUserRole.name());
@@ -81,11 +84,13 @@ public class AppUser implements UserDetails {
         return enabled;
     }
 
-    public AppUser(String firstname, String lastname, String email, String password, AppUserRole appUserRole) {
+    public AppUser(String firstname, String lastname, String email, String password, AppUserRole role, Employee employee)
+    {
         this.firstname = firstname;
         this.lastname = lastname;
+        this.appUserRole = role;
         this.email = email;
         this.password = password;
-        this.appUserRole = appUserRole;
+        this.employee = employee;
     }
 }

@@ -50,8 +50,7 @@ public class AppUserService implements UserDetailsService {
         confirmationTokenService.addToken(confirmationToken);
         return token;
     }
-    public String enableAppUser(AppUser appUser)
-    {
+    public String enableAppUser(AppUser appUser) {
         appUser.setEnabled(true);
         return "";
     }

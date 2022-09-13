@@ -26,7 +26,4 @@ public class Designation {
     )
     private Long id;
     private String title;
-    @OneToMany(mappedBy = "designation", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private Set<Employee> employees;
 }

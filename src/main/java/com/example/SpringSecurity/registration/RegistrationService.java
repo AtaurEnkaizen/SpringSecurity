@@ -1,5 +1,8 @@
 package com.example.SpringSecurity.registration;
 
+import com.example.SpringSecurity.Entity.Employee;
+import com.example.SpringSecurity.Entity.ErrorResponse;
+import com.example.SpringSecurity.Entity.SuccessResponse;
 import com.example.SpringSecurity.appuser.AppUser;
 import com.example.SpringSecurity.appuser.AppUserRole;
 import com.example.SpringSecurity.appuser.AppUserService;
@@ -22,13 +25,26 @@ public class RegistrationService {
     private  final ConfirmationTokenService confirmationTokenService;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    public boolean LogInEnable(String email, String password)
+
+    public Object LogOut()
+    {
+        return new SuccessResponse(
+            "200", "Logout successful", true, null
+        );
+    }
+    public Object LogInEnable(String email, String password)
     {
         Optional<AppUser> appUser = userRepository.findByEmail(email);
         String passwordFromDatabase = appUser.get().getPassword().toString();
-        if(appUser.isPresent() && bCryptPasswordEncoder.matches(password,passwordFromDatabase)) return true;
-        return false;
-
+        if(appUser.isPresent() && bCryptPasswordEncoder.matches(password,passwordFromDatabase))
+        {
+            return new SuccessResponse(
+                 "200", "Login successful", true, appUser
+            );
+        }
+        return new ErrorResponse(
+                "400", "Login Unsuccessful", false
+        );
     }
     public String Registration(RegistrationModel registrationModel)
     {
@@ -41,7 +57,7 @@ public class RegistrationService {
                 registrationModel.getLastname(),
                 registrationModel.getEmail(),
                 registrationModel.getPassword(),
-                AppUserRole.USER
+                AppUserRole.Management, new Employee()
                 )
         );
     }
