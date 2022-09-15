@@ -29,11 +29,11 @@ public class RegistrationController {
     {
         return registrationService.tokenConfirmation(token);
     }
-    @PostMapping("/login")
+   /* @PostMapping("/login")
     public Object LogIn(@RequestParam("email") String email, @RequestParam("password") String password)
     {
         return registrationService.LogInEnable(email, password);
-    }
+    }*/
     @GetMapping("/logout")
     public Object LogOut()
     {

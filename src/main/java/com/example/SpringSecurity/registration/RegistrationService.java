@@ -29,17 +29,18 @@ public class RegistrationService {
     public Object LogOut()
     {
         return new SuccessResponse(
-            "200", "Logout successful", true, null
+            "200", "Logout successful", true, null, "confirmationToken"
         );
     }
     public Object LogInEnable(String email, String password)
     {
         Optional<AppUser> appUser = userRepository.findByEmail(email);
         String passwordFromDatabase = appUser.get().getPassword().toString();
+        String confirmationToken = confirmationTokenService.findByAppUserId(appUser.get().getId());
         if(appUser.isPresent() && bCryptPasswordEncoder.matches(password,passwordFromDatabase))
         {
             return new SuccessResponse(
-                 "200", "Login successful", true, appUser
+                 "200", "Login successful", true, appUser, confirmationToken
             );
         }
         return new ErrorResponse(
@@ -57,7 +58,7 @@ public class RegistrationService {
                 registrationModel.getLastname(),
                 registrationModel.getEmail(),
                 registrationModel.getPassword(),
-                AppUserRole.Management, new Employee()
+                AppUserRole.User, new Employee()
                 )
         );
     }

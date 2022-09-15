@@ -19,6 +19,12 @@ public class EmployeeController {
         employeeService.save(employee);
         return "Done";
     }*/
+
+//    @GetMapping("/find")
+//    public Object findById(@RequestParam("id") Long id)
+//    {
+//        return employeeService.findById(id);
+//    }
     @GetMapping("/all")
     public List<Employee> getAllEmployee()
     {

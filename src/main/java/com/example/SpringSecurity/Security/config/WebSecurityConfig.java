@@ -1,16 +1,20 @@
 package com.example.SpringSecurity.Security.config;
 
+import com.example.SpringSecurity.Filters.CustomAuthenticationFilter;
+import com.example.SpringSecurity.Filters.CustomAuthorizationFilter;
 import com.example.SpringSecurity.appuser.AppUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
@@ -25,14 +29,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         httpSecurity
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/registration/**")
-                .permitAll()
-                .anyRequest()
+                .csrf().disable();
+        httpSecurity
+                .authorizeRequests().antMatchers("/registration/**").permitAll();
+        httpSecurity
+                .authorizeRequests().antMatchers("/**").hasAnyAuthority("User", "Management");
+        httpSecurity
+                .authorizeRequests().anyRequest()
                 .authenticated().and()
-                .formLogin()
-                .loginProcessingUrl("http://localhost:8080/registration/login");
+                .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
+                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+//                .formLogin()
+//                .loginProcessingUrl("http://localhost:8080/registration/login");
     }
 
     @Override
@@ -46,5 +54,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
         daoAuthenticationProvider.setUserDetailsService(appUserService);
         return daoAuthenticationProvider;
+    }
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception{
+        return super.authenticationManagerBean();
     }
 }
